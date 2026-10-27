@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>👑 DEEPAK MATRIX KING 👑</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: black; overflow: hidden; font-family: monospace; }
+        canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
+        .hud-overlay {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 2; color: #00FF00; text-align: center; background: rgba(0, 0, 0, 0.85);
+            padding: 30px; border: 2px solid #00FF00; box-shadow: 0 0 30px #00FF00;
+            border-radius: 10px; width: 90%; max-width: 500px;
+        }
+        h1 { color: #ff0000; font-size: 22px; margin-bottom: 15px; text-shadow: 0 0 10px #ff0000; }
+        p { font-size: 14px; margin-bottom: 12px; }
+        input {
+            background: black; border: 1px solid #00FF00; color: #00FF00;
+            padding: 8px; width: 80%; text-align: center; margin-bottom: 10px; font-family: monospace;
+        }
+        button {
+            background: #00FF00; color: black; border: none; padding: 8px 15px;
+            font-weight: bold; cursor: pointer; font-family: monospace; margin: 5px;
+        }
+        .btn-wipe { background: #ff0000; color: white; }
+        
+        /* प्रोग्रेस बार स्टाइल */
+        .progress-box { display: none; margin-top: 15px; }
+        .progress-bar-container {
+            width: 100%; background-color: #222; border: 1px solid #00FF00; height: 20px; margin-top: 5px;
+        }
+        .progress-bar {
+            width: 0%; height: 100%; background-color: #ff0000; box-shadow: 0 0 10px #ff0000; transition: width 0.1s;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix"></canvas>
+
+    <div class="hud-overlay" id="dashboard">
+        <h1>[🚨] CONTROL PANEL: AGENT DEEPAK [🚨]</h1>
+        <hr style="border-color: #00FF00; margin-bottom: 15px;">
+        <p><b>[+] NODE:</b> Near High School, Aawapur</p>
+        
+        <!-- लॉगिन सेक्शन -->
+        <div id="login-sec">
+            <p>ENTER MASTER PASSKEY TO ACCESS TERMINAL:</p>
+            <input type="password" id="passkey" placeholder="••••••••"><br>
+            <button onclick="checkPass()">LOGIN</button>
+        </div>
+
+        <!-- सीक्रेट कमांड्स -->
+        <div id="control-sec" style="display:none;">
+            <p style="color:#ffcc00;">[👑] ACCESS GRANTED! WELCOME KING DEEPAK</p>
+            <button class="btn-wipe" onclick="startWipe()">WIPE DATABASE</button>
+            <button onclick="location.reload()">RESET RADAR</button>
+            
+            <!-- प्रोग्रेस बार UI -->
+            <div class="progress-box" id="p-box">
+                <p id="p-text" style="color: #ff0000; font-weight: bold;">INITIALIZING DESTRUCTION...</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="p-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let audioContext;
+
+        function playBeep(freq, duration, type='sawtooth') {
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioContext.createOscillator();
+            osc.type = type;
+            osc.frequency.value = freq;
+            osc.connect(audioContext.destination);
+            osc.start();
+            setTimeout(() => osc.stop(), duration);
+        }
+
+        function checkPass() {
+            const pass = document.getElementById('passkey').value;
+            if(pass === "1234") {
+                playBeep(800, 200, 'sine');
+                document.getElementById('login-sec').style.display = "none";
+                document.getElementById('control-sec').style.display = "block";
+            } else {
+                playBeep(150, 600, 'sawtooth');
+                alert("[⚠️] ACCESS DENIED: INVALID KEY!");
+            }
+        }
+
+        // नया प्रोग्रेस बार और सायरन फंक्शन
+        function startWipe() {
+            document.getElementById('p-box').style.display = "block";
+            let width = 0;
+            const bar = document.getElementById('p-bar');
+            const text = document.getElementById('p-text');
+            
+            // लगातार खतरनाक हैकर सायरन बजाना
+            const sirenInterval = setInterval(() => {
+                playBeep(900, 150, 'sawtooth');
+            }, 300);
+
+            const progressInterval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(progressInterval);
+                    clearInterval(sirenInterval);
+                    text.innerText = "ALL DATABASES WIPED SUCCESSFULLY!";
+                    playBeep(400, 800, 'sine');
+                    setTimeout(() => { location.reload(); }, 2000);
+                } else {
+                    width++;
+                    bar.style.width = width + '%';
+                    text.innerText = "DELETING MAIN-FRAME DATA... " + width + "%";
+                }
+            }, 50); // स्पीड एडजस्ट करने के लिए
+        }
+
+        // मैट्रिक्स एनीमेशन कोड
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ👑💀⚡".split("");
+        const fontSize = 16; const columns = canvas.width / fontSize;
+        const rainDrops = Array(Math.floor(columns)).fill(1);
+
+        setInterval(() => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+                rainDrops[i]++;
+            }
+        }, 30);
+    </script>
+</body>
+</html>
